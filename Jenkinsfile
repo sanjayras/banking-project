@@ -30,6 +30,18 @@ pipeline {
                sh 'docker push sanjayras/financeme:1.0'
                      }
                 }
-     
+         stage('Config & Deployment') {
+            steps {
+                
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awslogin', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    dir('Terraform_files') {
+                    sh 'sudo chmod 600 mykey.pem'
+                    sh 'terraform init'
+                    sh 'terraform validate'
+                    sh 'terraform apply --auto-approve'
+}
+    }
+}
+}
 }
 }
