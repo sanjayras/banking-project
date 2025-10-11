@@ -36,26 +36,40 @@ pipeline {
         }
         
         stage('Deployment and Configuration') {
-            steps {
-                withCredentials([
-                    aws(
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                        credentialsId: 'awslogin', 
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    ),
-                    file(credentialsId: 'bank_pem', variable: 'PEM_KEY')
-                ]) {
-                    dir('Terraform_files') {
-                        sh '''
-                            cp $PEM_KEY bank.pem
-                            chmod 600 bank.pem
-                            terraform init
-                            terraform validate
-                            terraform apply --auto-approve
-                        '''
-                    }
-                }
+    steps {
+        withCredentials([
+            aws(
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                credentialsId: 'awslogin', 
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+            ),
+            file(credentialsId: 'bank_pem', variable: 'PEM_KEY')
+        ]) {
+            dir('Terraform_files') {
+                sh '''
+                    echo "=== Current Directory ==="
+                    pwd
+                    
+                    echo "=== Listing all files ==="
+                    ls -la
+                    
+                    echo "=== Checking for .tf files ==="
+                    ls -la *.tf
+                    
+                    cp $PEM_KEY bank.pem
+                    chmod 600 bank.pem
+                    
+                    echo "=== After copying PEM ==="
+                    ls -la
+                    
+                    terraform init
+                    terraform validate
+                    terraform apply --auto-approve
+                '''
             }
         }
+    }
+}
+
     }
 }
