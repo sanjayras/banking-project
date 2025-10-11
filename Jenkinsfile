@@ -7,11 +7,12 @@ pipeline {
 
     stages {
         stage('Build') {
-            steps {
-                git 'https://github.com/sanjayras/banking-project.git'
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
-            }        
-        }
+    steps {
+        git branch: 'main', url: 'https://github.com/sanjayras/banking-project.git'
+        sh "mvn -Dmaven.test.failure.ignore=true clean package"
+    }
+}
+
         
         stage('Create Docker Image') {
             steps {
