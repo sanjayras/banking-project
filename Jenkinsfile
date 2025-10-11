@@ -33,7 +33,7 @@ pipeline {
          stage('Deployment and Configuration') {
             steps {
                 
-                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awslogin', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awslogin', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'), file(credentialsId: 'bank_pem', variable: 'PEM_KEY')]) {
                     dir('Terraform_files') {
                     sh 'sudo chmod 600 bank.pem'
                     sh 'terraform init'
